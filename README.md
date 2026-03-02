@@ -10,6 +10,8 @@
 
 - Wagering system with chip tracking
 
+- Testing wth JUnit5
+
 ## Features
 
 - Load and save player profiles with chip counts
