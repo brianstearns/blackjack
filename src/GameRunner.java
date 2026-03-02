@@ -115,6 +115,7 @@ public class GameRunner {
             }
 
             boolean hitting = true;
+            boolean doubleDown = false;
             boolean playerBusted = false;
             int count = 0;
 
@@ -148,18 +149,47 @@ public class GameRunner {
                     break;
                 }
 
-                System.out.println("What would you like to do? (hit/stand): ");
+                System.out.println("What would you like to do? (hit/stand/double): ");
                 String actionInput = scanner.nextLine().trim().toLowerCase();
 
-                if (actionInput.equals("hit")) {
+                if (actionInput.equals("double")) {
+                    if (playersCard.length != 2) {
+                        System.out.println("You can only double down on your first move (with 2 cards).");
+                        continue;
+                    }
+
+                    if (currentPlayer.getChipCount() < wager * 2) {
+                        System.out.println("You don't have enough chips to double down.");
+                        continue;
+                    }
+
+                    wager *= 2;
+
+                    Card newCard = deck.dealCard();
+                    playersCard = java.util.Arrays.copyOf(playersCard, playersCard.length + 1);
+                    playersCard[playersCard.length - 1] = newCard;
+
+                    System.out.println("You doubled down and drew: " + newCard);
+
+                    count = calculateHandValue(playersCard, deck);
+
+                    if (count > 21) {
+                        System.out.println("You busted with " + count + ". You lose.");
+                        currentPlayer.loseChips(wager);
+                        pm.savePlayers();
+                        playerBusted = true;
+                    }
+
+                    hitting = false;
+                } else if (actionInput.toLowerCase().equals("hit")) {
                     Card newCard = deck.dealCard();
                     playersCard = java.util.Arrays.copyOf(playersCard, playersCard.length + 1);
                     playersCard[playersCard.length - 1] = newCard;
                     System.out.println("You drew: " + newCard);
-                } else if (actionInput.equals("stand")) {
+                } else if (actionInput.toLowerCase().equals("stand")) {
                     hitting = false;
                 } else {
-                    System.out.println("Invalid input. Please enter 'hit' or 'stand'.");
+                    System.out.println("Invalid input. Please enter 'hit', 'stand', or 'double'.");
                 }
             }
 

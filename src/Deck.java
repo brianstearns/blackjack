@@ -94,7 +94,8 @@ public class Deck {
     }
 
     /**
-     * Deals a card from the top of the deck and increments the top index to point to
+     * Deals a card from the top of the deck and increments the top index to point
+     * to
      * the next card in the deck.
      * 
      * @return Card object representing the dealt card from the top of the deck
@@ -104,7 +105,9 @@ public class Deck {
     }
 
     /**
-     * Determines if the deck needs to be reshuffled based on the number of cards left.
+     * Determines if the deck needs to be reshuffled based on the number of cards
+     * left.
+     * 
      * @return true if the deck needs reshuffling (15 or fewer cards left)
      */
     public boolean needsReshuffle() {
