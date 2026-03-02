@@ -73,3 +73,23 @@ You should see output indicating which tests passed or failed.
     <img src="screenshots/screenshot2.png" alt="Gameplay showing player cards and wager input" width="300" style="margin-right: 10px;"/> 
     <img src="screenshots/screenshot3.png" alt="Player hitting and hand count updating" width="300"/> 
 </div>
+
+
+### Any potential errors
+
+
+Make to to have your .vscode/settings.json to have access to the project. Make sure it looks something like this. 
+
+```bash
+{
+    "java.project.sourcePaths": [
+        "src",
+        "test"
+    ],
+    "java.project.referencedLibraries": [
+        "libs\\gson-2.10.1.jar",
+        "libs\\junit-platform-console-standalone-1.14.2.jar"
+    ],
+    
+}
+```
