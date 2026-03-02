@@ -115,7 +115,6 @@ public class GameRunner {
             }
 
             boolean hitting = true;
-            boolean doubleDown = false;
             boolean playerBusted = false;
             int count = 0;
 
@@ -152,7 +151,7 @@ public class GameRunner {
                 System.out.println("What would you like to do? (hit/stand/double): ");
                 String actionInput = scanner.nextLine().trim().toLowerCase();
 
-                if (actionInput.equals("double")) {
+                if (actionInput.toLowerCase().equals("double")) {
                     if (playersCard.length != 2) {
                         System.out.println("You can only double down on your first move (with 2 cards).");
                         continue;
@@ -181,6 +180,7 @@ public class GameRunner {
                     }
 
                     hitting = false;
+
                 } else if (actionInput.toLowerCase().equals("hit")) {
                     Card newCard = deck.dealCard();
                     playersCard = java.util.Arrays.copyOf(playersCard, playersCard.length + 1);
