@@ -188,17 +188,19 @@ public class GameRunner {
             }
             System.out.println("Count: " + dealerCount);
 
-            if (dealerCount > 21) {
-                System.out.println("Dealer busted with a total of " + dealerCount + ". You win!");
-                currentPlayer.winChips(wager);
-            } else if (dealerCount > count) {
-                System.out.println("Dealer wins with a total of " + dealerCount + " against your " + count + ".");
-                currentPlayer.loseChips(wager);
-            } else if (dealerCount < count) {
-                System.out.println("You win with a total of " + count + " against the dealer's " + dealerCount + "!");
-                currentPlayer.winChips(wager);
-            } else {
-                System.out.println("It's a push with both you and the dealer at " + count + ".");
+            if(!playerBusted) {
+                if (dealerCount > 21) {
+                    System.out.println("Dealer busted with a total of " + dealerCount + ". You win!");
+                    currentPlayer.winChips(wager);
+                } else if (dealerCount > count) {
+                    System.out.println("Dealer wins with a total of " + dealerCount + " against your " + count + ".");
+                    currentPlayer.loseChips(wager);
+                } else if (dealerCount < count) {
+                    System.out.println("You win with a total of " + count + " against the dealer's " + dealerCount + "!");
+                    currentPlayer.winChips(wager);
+                } else {
+                    System.out.println("It's a push with both you and the dealer at " + count + ".");
+                }
             }
 
             pm.savePlayers();
