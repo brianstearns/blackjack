@@ -1,1 +1,22 @@
-[{"name":"permanence","chipCount":1000},{"name":"brian","chipCount":60000},{"name":"sam","chipCount":601019000},{"name":"john","chipCount":1000000},{"name":"noah","chipCount":15000}]
+[
+    {
+        "name": "permanence",
+        "chipCount": 1000
+    },
+    {
+        "name": "brian",
+        "chipCount": 61000
+    },
+    {
+        "name": "sam",
+        "chipCount": 187657758
+    },
+    {
+        "name": "john",
+        "chipCount": 1000000
+    },
+    {
+        "name": "noah",
+        "chipCount": 5000
+    }
+]

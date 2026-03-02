@@ -43,6 +43,28 @@ java -cp "bin;libs/gson-2.10.1.jar" GameRunner
 java -cp "bin:libs/gson-2.10.1.jar" GameRunner
 ```
 
+## Testing
+
+This project uses **JUnit 5** to test game logic.
+
+### Running Tests
+
+1. Make sure the JUnit standalone jar is in the `libs/` folder: ```libs/junit-platform-console-standalone-1.14.2.jar```
+
+
+2. Compile all source and test files into the `bin/` folder:
+
+```javac -cp "libs/*" -d bin src/*.java test/*.java```
+
+3. Run all tests using the JUnit console launcher:
+
+
+```java -jar libs/junit-platform-console-standalone-1.14.2.jar -cp bin --scan-class-path```
+
+You should see output indicating which tests passed or failed.
+
+
+
 ## Screenshots
 <div style="align-items: center; display: flex; gap: 10px; justify-content: center;"> 
     <img src="screenshots/screenshot1.png" alt="Enter player name and welcome message" width="300" style="margin-right: 10px;"/> 

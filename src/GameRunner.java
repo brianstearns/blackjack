@@ -53,6 +53,7 @@ public class GameRunner {
 
             int wager = 0;
             while (true) {
+                System.out.println("Your current chip count: " + currentPlayer.printChipCount());
                 System.out.print("Enter your wager: ");
                 String wagerInput = scanner.nextLine().trim();
                 try {
@@ -71,6 +72,12 @@ public class GameRunner {
 
             System.out.println("------------------------------");
 
+            if (deck.needsReshuffle()) {
+                deck.makeDeck();
+                deck.shuffle();
+                System.out.println("Reshuffling the deck...");
+            }
+
             Card dealersCard[] = new Card[] {
                     deck.dealCard(), deck.dealCard()
             };
@@ -83,39 +90,28 @@ public class GameRunner {
             System.out.println(
                     "Dealer's visible card: " + dealersCard[0] + " --- Count: " + deck.getCardValue(dealersCard[0]));
 
-            if ((dealersCard[0].getRank().equals("Ace")
-                    && (dealersCard[0].getRank().equals("10") || dealersCard[0].getRank().equals("Jack")
-                            || dealersCard[0].getRank().equals("Queen") || dealersCard[0].getRank().equals("King")))
-                    &&
-                    (playersCard[0].getRank().equals("Ace") && (playersCard[0].getRank().equals("10")
-                            || playersCard[0].getRank().equals("Jack") || playersCard[0].getRank().equals("Queen")
-                            || playersCard[0].getRank().equals("King")))) {
-                System.out.println("Both you and the dealer have blackjack. It's a push!");
-                System.out.println("Dealer's hand: " + dealersCard[0] + ", " + dealersCard[1]);
-                System.out.println("Your hand: " + playersCard[0] + ", " + playersCard[1]);
-                continue;
-            }
+            int blackjackResult = hasBlackjack(playersCard, dealersCard, deck);
 
-            if (dealersCard[0].getRank().equals("Ace")
-                    && (dealersCard[0].getRank().equals("10") || dealersCard[0].getRank().equals("Jack")
-                            || dealersCard[0].getRank().equals("Queen") || dealersCard[0].getRank().equals("King"))) {
-                System.out.println("Dealer has blackjack sorry you lose");
-                System.out.println("Dealer's hand: " + dealersCard[0] + ", " + dealersCard[1]);
-                System.out.println("Your hand: " + playersCard[0] + ", " + playersCard[1]);
-                currentPlayer.loseChips(wager);
-                pm.savePlayers();
-                continue;
-            }
-
-            if (playersCard[0].getRank().equals("Ace")
-                    && (playersCard[0].getRank().equals("10") || playersCard[0].getRank().equals("Jack")
-                            || playersCard[0].getRank().equals("Queen") || playersCard[0].getRank().equals("King"))) {
-                System.out.println("You have blackjack congrats you win");
-                System.out.println("Dealer's hand: " + dealersCard[0] + ", " + dealersCard[1]);
-                System.out.println("Your hand: " + playersCard[0] + ", " + playersCard[1]);
-                currentPlayer.winChips((int) (wager * 1.5));
-                pm.savePlayers();
-                continue;
+            switch (blackjackResult) {
+                case 0 -> {
+                    System.out.println("Both you and the dealer have blackjack. It's a push!");
+                    System.out.println("Dealer's hand: " + dealersCard[0] + ", " + dealersCard[1]);
+                    System.out.println("Your hand: " + playersCard[0] + ", " + playersCard[1]);
+                }
+                case -1 -> {
+                    System.out.println("Dealer has blackjack sorry you lose");
+                    System.out.println("Dealer's hand: " + dealersCard[0] + ", " + dealersCard[1]);
+                    System.out.println("Your hand: " + playersCard[0] + ", " + playersCard[1]);
+                    currentPlayer.loseChips(wager);
+                    pm.savePlayers();
+                }
+                case 1 -> {
+                    System.out.println("You have blackjack congrats you win");
+                    System.out.println("Dealer's hand: " + dealersCard[0] + ", " + dealersCard[1]);
+                    System.out.println("Your hand: " + playersCard[0] + ", " + playersCard[1]);
+                    currentPlayer.winChips((int) (wager * 1.5));
+                    pm.savePlayers();
+                }
             }
 
             boolean hitting = true;
@@ -188,7 +184,7 @@ public class GameRunner {
             }
             System.out.println("Count: " + dealerCount);
 
-            if(!playerBusted) {
+            if (!playerBusted) {
                 if (dealerCount > 21) {
                     System.out.println("Dealer busted with a total of " + dealerCount + ". You win!");
                     currentPlayer.winChips(wager);
@@ -196,7 +192,8 @@ public class GameRunner {
                     System.out.println("Dealer wins with a total of " + dealerCount + " against your " + count + ".");
                     currentPlayer.loseChips(wager);
                 } else if (dealerCount < count) {
-                    System.out.println("You win with a total of " + count + " against the dealer's " + dealerCount + "!");
+                    System.out
+                            .println("You win with a total of " + count + " against the dealer's " + dealerCount + "!");
                     currentPlayer.winChips(wager);
                 } else {
                     System.out.println("It's a push with both you and the dealer at " + count + ".");
@@ -208,6 +205,15 @@ public class GameRunner {
         scanner.close();
     }
 
+    /**
+     * Calculates the total value of a hand of cards, accounting for Aces as 1 or
+     * 11.
+     * 
+     * @param hand Array of Card objects representing the player's hand
+     * @param deck Deck object used to get the value of each card
+     * @return Total value of the hand, with Aces counted as 1 or 11 to maximize the
+     *         hand's value without busting
+     */
     public static int calculateHandValue(Card[] hand, Deck deck) {
         int total = 0;
         int aceCount = 0;
@@ -226,5 +232,59 @@ public class GameRunner {
         }
 
         return total;
+    }
+
+    /**
+     * Determines if a hand of two cards is a blackjack (an Ace and a 10-value
+     * card).
+     * 
+     * @param hand Array of Card objects representing the hand to check for
+     *             blackjack
+     * @return true if the hand is a blackjack, false otherwise
+     */
+    public static boolean isBlackjack(Card[] hand) {
+        if (hand.length != 2)
+            return false;
+
+        boolean hasAce = false;
+        boolean hasTenValue = false;
+
+        for (Card card : hand) {
+            if (card.getRank().equals("Ace")) {
+                hasAce = true;
+            }
+            if (card.getRank().equals("10") ||
+                    card.getRank().equals("Jack") ||
+                    card.getRank().equals("Queen") ||
+                    card.getRank().equals("King")) {
+                hasTenValue = true;
+            }
+        }
+
+        return hasAce && hasTenValue;
+    }
+
+    /**
+     * Determines the outcome of a hand based on whether the player and dealer have
+     * 
+     * @param playeCards  Array of Card objects representing the player's hand
+     * @param dealerCards Array of Card objects representing the dealer's hand
+     * @param deck        Deck object used to calculate card values if needed
+     * @return 0 if both player and dealer have blackjack (push), 1 if player has
+     *         blackjack
+     */
+    public static int hasBlackjack(Card[] playeCards, Card[] dealerCards, Deck deck) {
+        boolean playerHasBlackjack = isBlackjack(playeCards);
+        boolean dealerHasBlackjack = isBlackjack(dealerCards);
+
+        if (playerHasBlackjack && dealerHasBlackjack) {
+            return 0;
+        } else if (playerHasBlackjack) {
+            return 1;
+        } else if (dealerHasBlackjack) {
+            return -1;
+        } else {
+            return 2;
+        }
     }
 }
