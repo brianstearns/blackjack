@@ -57,7 +57,7 @@ Java 17+ and the libs/ folder (contains Gson)
 2. Run the batch file:
 
 ```bash
-build.bat
+./build.bat
 ```
 
 3. After it finishes, start the game with:
