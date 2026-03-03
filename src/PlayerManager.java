@@ -32,7 +32,8 @@ public class PlayerManager {
         try (FileReader reader = new FileReader(filename)) {
             Type playerListType = new TypeToken<List<Player>>() {
             }.getType();
-            players = gson.fromJson(reader, playerListType);
+            List<Player> loaded = gson.fromJson(reader, playerListType);
+            players = (loaded != null) ? loaded : new ArrayList<>();
         } catch (IOException e) {
             e.printStackTrace();
             players = new ArrayList<>();
@@ -43,8 +44,18 @@ public class PlayerManager {
      * Saves the current list of players to the JSON file.
      */
     public void savePlayers() {
-        try (FileWriter writer = new FileWriter(filename)) {
-            gson.toJson(players, writer);
+        try {
+            File file = new File(filename);
+
+            File parentDir = file.getParentFile();
+            if (parentDir != null && !parentDir.exists()) {
+                parentDir.mkdirs();
+            }
+
+            try (FileWriter writer = new FileWriter(file)) {
+                gson.toJson(players, writer);
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
