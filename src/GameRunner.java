@@ -2,13 +2,16 @@ import java.util.List;
 import java.util.Scanner;
 
 public class GameRunner {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         PlayerManager pm = new PlayerManager();
         pm.loadPlayers();
 
         Deck deck = new Deck();
         deck.makeDeck();
         deck.shuffle();
+        displayShuffle();
+
+        System.out.println(printLogo());
 
         Scanner scanner = new Scanner(System.in);
         System.out.print("Enter your name: ");
@@ -75,7 +78,7 @@ public class GameRunner {
             if (deck.needsReshuffle()) {
                 deck.makeDeck();
                 deck.shuffle();
-                System.out.println("Reshuffling the deck...");
+                displayShuffle();
             }
 
             Card dealersCard[] = new Card[] {
@@ -316,5 +319,27 @@ public class GameRunner {
         } else {
             return 2;
         }
+    }
+
+    public static String printLogo() {
+        return """
+                 $$$$$$$\\  $$\\                     $$\\         $$$$$\\                     $$\\
+                 $$  __$$\\ $$ |                    $$ |        \\__$$ |                    $$ |
+                 $$ |  $$ |$$ | $$$$$$\\   $$$$$$$\\ $$ |  $$\\      $$ | $$$$$$\\   $$$$$$$\\ $$ |  $$\\
+                 $$$$$$$\\ |$$ | \\____$$\\ $$  _____|$$ | $$  |     $$ | \\____$$\\ $$  _____|$$ | $$  |
+                 $$  __$$\\ $$ | $$$$$$$ |$$ /      $$$$$$  /$$\\   $$ | $$$$$$$ |$$ /      $$$$$$  /
+                 $$ |  $$ |$$ |$$  __$$ |$$ |      $$  _$$< $$ |  $$ |$$  __$$ |$$ |      $$  _$$<
+                 $$$$$$$  |$$ |\\$$$$$$$ |\\$$$$$$$\\ $$ | \\$$\\\\$$$$$$  |\\$$$$$$$ |\\$$$$$$$\\ $$ | \\$$\\
+                 \\_______/ \\__| \\_______| \\_______|\\__|  \\__|\\______/  \\_______| \\_______|\\__|  \\__|
+                """;
+    }
+
+    public static void displayShuffle() throws InterruptedException {
+        System.out.print("Shuffling deck");
+        for (int i = 0; i < 3; i++) {
+            Thread.sleep(500);
+            System.out.print(".");
+        }
+        System.out.println("\n");
     }
 }
