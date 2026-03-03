@@ -95,29 +95,33 @@ public class GameRunner {
 
             int blackjackResult = hasBlackjack(playersCard, dealersCard, deck);
 
+            boolean hitting = true;
+
             switch (blackjackResult) {
                 case 0 -> {
-                    System.out.println("Both you and the dealer have blackjack. It's a push!");
+                    System.out.println(Color.YELLOW.getCode() + "Both you and the dealer have blackjack. It's a push!" + Color.RESET.getCode());
                     System.out.println("Dealer's hand: " + dealersCard[0] + ", " + dealersCard[1]);
                     System.out.println("Your hand: " + playersCard[0] + ", " + playersCard[1]);
+                    hitting = false;
                 }
                 case -1 -> {
-                    System.out.println("Dealer has blackjack sorry you lose");
+                    System.out.println(Color.RED.getCode() + "Dealer has blackjack sorry you lose" + Color.RESET.getCode());
                     System.out.println("Dealer's hand: " + dealersCard[0] + ", " + dealersCard[1]);
                     System.out.println("Your hand: " + playersCard[0] + ", " + playersCard[1]);
                     currentPlayer.loseChips(wager);
+                    hitting = false;
                     pm.savePlayers();
                 }
                 case 1 -> {
-                    System.out.println("You have blackjack congrats you win");
+                    System.out.println(Color.GREEN.getCode() + "You have blackjack congrats you win" + Color.RESET.getCode());
                     System.out.println("Dealer's hand: " + dealersCard[0] + ", " + dealersCard[1]);
                     System.out.println("Your hand: " + playersCard[0] + ", " + playersCard[1]);
                     currentPlayer.winChips((int) (wager * 1.5));
+                    hitting = false;
                     pm.savePlayers();
                 }
             }
 
-            boolean hitting = true;
             boolean playerBusted = false;
             int count = 0;
 
@@ -135,7 +139,7 @@ public class GameRunner {
                 System.out.println("  " + dealersCard[0]);
 
                 if (count == 21) {
-                    System.out.println("You hit 21! Good luck against the dealer!");
+                    System.out.println(Color.CYAN.getCode() + "You hit 21! Good luck against the dealer!" + Color.RESET.getCode());
                     currentPlayer.winChips(wager);
                     pm.savePlayers();
                     hitting = false;
@@ -143,7 +147,7 @@ public class GameRunner {
                 }
 
                 if (count > 21) {
-                    System.out.println("You busted with a total of " + count + ". You lose.");
+                    System.out.println(Color.RED.getCode() + "You busted with a total of " + count + ". You lose." + Color.RESET.getCode());
                     currentPlayer.loseChips(wager);
                     pm.savePlayers();
                     hitting = false;
@@ -156,12 +160,12 @@ public class GameRunner {
 
                 if (actionInput.toLowerCase().equals("double")) {
                     if (playersCard.length != 2) {
-                        System.out.println("You can only double down on your first move (with 2 cards).");
+                        System.out.println(Color.YELLOW.getCode() + "You can only double down on your first move (with 2 cards)." + Color.RESET.getCode());
                         continue;
                     }
 
                     if (currentPlayer.getChipCount() < wager * 2) {
-                        System.out.println("You don't have enough chips to double down.");
+                        System.out.println(Color.YELLOW.getCode() + "You don't have enough chips to double down." + Color.RESET.getCode());
                         continue;
                     }
 
@@ -176,7 +180,7 @@ public class GameRunner {
                     count = calculateHandValue(playersCard, deck);
 
                     if (count > 21) {
-                        System.out.println("You busted with " + count + ". You lose.");
+                        System.out.println(Color.RED.getCode() + "You busted with " + count + ". You lose." + Color.RESET.getCode());
                         currentPlayer.loseChips(wager);
                         pm.savePlayers();
                         playerBusted = true;
@@ -192,9 +196,11 @@ public class GameRunner {
                 } else if (actionInput.toLowerCase().equals("stand")) {
                     hitting = false;
                 } else {
-                    System.out.println("Invalid input. Please enter 'hit', 'stand', or 'double'.");
+                    System.out.println(Color.YELLOW.getCode() + "Invalid input. Please enter 'hit', 'stand', or 'double'. " + Color.RESET.getCode());
                 }
             }
+
+            System.out.println("------------------------------");
 
             int dealerCount = 0;
 
@@ -219,17 +225,16 @@ public class GameRunner {
 
             if (!playerBusted) {
                 if (dealerCount > 21) {
-                    System.out.println("Dealer busted with a total of " + dealerCount + ". You win!");
+                    System.out.println(Color.MAGENTA.getCode() + "Dealer busted with a total of " + dealerCount + ". You win!" + Color.RESET.getCode());
                     currentPlayer.winChips(wager);
                 } else if (dealerCount > count) {
-                    System.out.println("Dealer wins with a total of " + dealerCount + " against your " + count + ".");
+                    System.out.println(Color.RED.getCode() + "Dealer wins with a total of " + dealerCount + " against your " + count + "." + Color.RESET.getCode());
                     currentPlayer.loseChips(wager);
                 } else if (dealerCount < count) {
-                    System.out
-                            .println("You win with a total of " + count + " against the dealer's " + dealerCount + "!");
+                    System.out.println(Color.GREEN.getCode() + "You win with a total of " + count + " against the dealer's " + dealerCount + "!" + Color.RESET.getCode());
                     currentPlayer.winChips(wager);
                 } else {
-                    System.out.println("It's a push with both you and the dealer at " + count + ".");
+                    System.out.println(Color.CYAN.getCode() + "It's a push with both you and the dealer at " + count + "." + Color.RESET.getCode());
                 }
             }
 
@@ -321,8 +326,13 @@ public class GameRunner {
         }
     }
 
+    /**
+     * Returns a string representation of the game's logo to be displayed at the start
+     * @return String containing the ASCII art logo of the game
+     */
     public static String printLogo() {
-        return """
+        char[] logo = new char[1000];
+        logo = """
                  $$$$$$$\\  $$\\                     $$\\         $$$$$\\                     $$\\
                  $$  __$$\\ $$ |                    $$ |        \\__$$ |                    $$ |
                  $$ |  $$ |$$ | $$$$$$\\   $$$$$$$\\ $$ |  $$\\      $$ | $$$$$$\\   $$$$$$$\\ $$ |  $$\\
@@ -331,9 +341,22 @@ public class GameRunner {
                  $$ |  $$ |$$ |$$  __$$ |$$ |      $$  _$$< $$ |  $$ |$$  __$$ |$$ |      $$  _$$<
                  $$$$$$$  |$$ |\\$$$$$$$ |\\$$$$$$$\\ $$ | \\$$\\\\$$$$$$  |\\$$$$$$$ |\\$$$$$$$\\ $$ | \\$$\\
                  \\_______/ \\__| \\_______| \\_______|\\__|  \\__|\\______/  \\_______| \\_______|\\__|  \\__|
-                """;
+                """.toCharArray();
+        StringBuilder result = new StringBuilder();
+        for(char c : logo) {
+            if (c == '$') {
+                result.append(Color.GREEN.getCode() + c + Color.RESET.getCode());
+            } else {
+                result.append(c);
+            }
+        }
+        return result.toString();        
     }
 
+    /**
+     * Displays a shuffling animation in the console by printing "Shuffling deck" followed by three dots with a delay between each dot.
+     * @throws InterruptedException if the thread is interrupted while sleeping
+     */
     public static void displayShuffle() throws InterruptedException {
         System.out.print("Shuffling deck");
         for (int i = 0; i < 3; i++) {
