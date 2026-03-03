@@ -73,8 +73,6 @@ public class GameRunner {
                 }
             }
 
-            System.out.println("------------------------------");
-
             if (deck.needsReshuffle()) {
                 deck.makeDeck();
                 deck.shuffle();
@@ -88,10 +86,10 @@ public class GameRunner {
                     deck.dealCard(), deck.dealCard()
             };
 
-            System.out.println("Your cards: " + playersCard[0] + ", " + playersCard[1] + " --- Count: "
-                    + (deck.getCardValue(playersCard[0]) + deck.getCardValue(playersCard[1])));
-            System.out.println(
-                    "Dealer's visible card: " + dealersCard[0] + " --- Count: " + deck.getCardValue(dealersCard[0]));
+            // System.out.println("Your cards: " + displayCard(playersCard[0]) + ", " + displayCard(playersCard[1]) + " --- Count: "
+            //         + (deck.getCardValue(playersCard[0]) + deck.getCardValue(playersCard[1])));
+            // System.out.println(
+            //         "Dealer's visible card: " + displayCard(dealersCard[0]) + " --- Count: " + deck.getCardValue(dealersCard[0]));
 
             int blackjackResult = hasBlackjack(playersCard, dealersCard, deck);
 
@@ -132,11 +130,11 @@ public class GameRunner {
                 System.out.print("Your hand: ");
                 System.out.println(" --- Count: " + count);
                 for (Card card : playersCard) {
-                    System.out.print("  " + card + "\n");
+                    System.out.print(displayCard(card));
                 }
 
                 System.out.println("Dealer's hand:  --- Count: " + deck.getCardValue(dealersCard[0]));
-                System.out.println("  " + dealersCard[0]);
+                System.out.println(displayCard(dealersCard[0]));
 
                 if (count == 21) {
                     System.out.println(Color.CYAN.getCode() + "You hit 21! Good luck against the dealer!" + Color.RESET.getCode());
@@ -208,7 +206,7 @@ public class GameRunner {
                 dealerCount += deck.getCardValue(card);
             }
 
-            if (!playerBusted) {
+            if (!playerBusted && hasBlackjack(dealersCard, playersCard, deck) == 2) {
                 while (dealerCount <= 16) {
                     Card newCard = deck.dealCard();
                     dealersCard = java.util.Arrays.copyOf(dealersCard, dealersCard.length + 1);
@@ -219,11 +217,11 @@ public class GameRunner {
 
             System.out.println("Dealer's final hand: ");
             for (Card card : dealersCard) {
-                System.out.println("\n   " + card);
+                System.out.println(displayCard(card));
             }
             System.out.println("Count: " + dealerCount);
 
-            if (!playerBusted) {
+            if (!playerBusted && hasBlackjack(dealersCard, playersCard, deck) == 2) {
                 if (dealerCount > 21) {
                     System.out.println(Color.MAGENTA.getCode() + "Dealer busted with a total of " + dealerCount + ". You win!" + Color.RESET.getCode());
                     currentPlayer.winChips(wager);
@@ -339,7 +337,7 @@ public class GameRunner {
                  $$$$$$$\\ |$$ | \\____$$\\ $$  _____|$$ | $$  |     $$ | \\____$$\\ $$  _____|$$ | $$  |
                  $$  __$$\\ $$ | $$$$$$$ |$$ /      $$$$$$  /$$\\   $$ | $$$$$$$ |$$ /      $$$$$$  /
                  $$ |  $$ |$$ |$$  __$$ |$$ |      $$  _$$< $$ |  $$ |$$  __$$ |$$ |      $$  _$$<
-                 $$$$$$$  |$$ |\\$$$$$$$ |\\$$$$$$$\\ $$ | \\$$\\\\$$$$$$  |\\$$$$$$$ |\\$$$$$$$\\ $$ | \\$$\\
+                 $$$$$$$  |$$ |\\$$$$$$$ |\\$$$$$$$\\ $$ | \\$$\\$$$$$$  |\\$$$$$$$ |\\$$$$$$$\\ $$ | \\$$\\
                  \\_______/ \\__| \\_______| \\_______|\\__|  \\__|\\______/  \\_______| \\_______|\\__|  \\__|
                 """.toCharArray();
         StringBuilder result = new StringBuilder();
@@ -364,5 +362,37 @@ public class GameRunner {
             System.out.print(".");
         }
         System.out.println("\n");
+    }
+
+    /**
+     * Nicely display the value of the card in ASCII characters
+     * @param card The card to have displayed
+     * @return The full string of the card on display
+     */
+    public static String displayCard(Card card) {
+        StringBuilder sb = new StringBuilder();
+        String temp = "";
+
+        sb.append(" _______\n");
+        temp = (card.getRank() == "Jack" 
+             || card.getRank() == "King")   ? ("|" + card.getRank() + "   |\n") 
+             : (card.getRank() == "Queen")  ? ("|" + card.getRank() + "  |\n")
+             : (card.getRank() == "Ace")    ? ("|" + card.getRank() + "    |\n")
+             : (card.getRank() == "10")     ? ("|" + card.getRank() + "     |\n")
+             :                                ("|" + card.getRank() + "      |\n");
+             
+        sb.append(temp);
+        sb.append("|       |\n");
+        sb.append("|   .   |\n");
+        sb.append("|       |\n");
+        temp = (card.getRank() == "Jack" 
+             || card.getRank() == "King")   ? ("|___" + card.getRank() + "|\n") 
+             : (card.getRank() == "Queen")  ? ("|__" + card.getRank() + "|\n")
+             : (card.getRank() == "Ace")    ? ("|____" + card.getRank() + "|\n")
+             : (card.getRank() == "10")     ? ("|_____" + card.getRank() + "|\n")
+             :                                ("|______" + card.getRank() + "|\n");
+        sb.append(temp);
+
+        return sb.toString();
     }
 }
