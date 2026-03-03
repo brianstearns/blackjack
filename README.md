@@ -32,17 +32,38 @@ Player data is stored in a JSON file (```players.json```) in the project root. T
 
 ## How to run?
 
-1. Clone the repository
+### Option 1: Run the Prebuilt JAR (Recommended)
 
+1. Make sure you have Java 17+ installed.
+
+```bash
+java -version
 ```
-# Compile all Java files (adjust path to gson jar as needed)
-javac -cp "libs/gson-2.10.1.jar" src/*.java -d bin
+2. In the project root directory, run:
 
-# Run the game (Windows)
-java -cp "bin;libs/gson-2.10.1.jar" GameRunner
+```bash
+java -jar blackjack.jar
+```
+Then the game will launch in a terminal window!
 
-# Run the game (Linux/Mac)
-java -cp "bin:libs/gson-2.10.1.jar" GameRunner
+### Option 2: Build From Source
+
+If you want to build the project yourself:
+
+1. Make sure you have:
+
+Java 17+ and the libs/ folder (contains Gson)
+
+2. Run the batch file:
+
+```bash
+./build.bat
+```
+
+3. After it finishes, start the game with:
+
+```bash
+java -jar blackjack.jar
 ```
 
 ## Testing
