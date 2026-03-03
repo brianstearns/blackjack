@@ -34,7 +34,7 @@ Player data is stored in a JSON file (```players.json```) in the project root. T
 
 ### Option 1: Run the Prebuilt JAR (Recommended)
 
-1. Make sure you have Java 17+ installed.
+1. Make sure you have Java 22+ installed.
 
 ```bash
 java -version
@@ -52,7 +52,7 @@ If you want to build the project yourself:
 
 1. Make sure you have:
 
-Java 17+ and the libs/ folder (contains Gson)
+Java 22+ and the libs/ folder (contains Gson)
 
 2. Run the batch file:
 
