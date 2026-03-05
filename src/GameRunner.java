@@ -380,11 +380,12 @@ public class GameRunner {
              : (card.getRank() == "Ace")    ? ("|" + card.getRank() + "    |\n")
              : (card.getRank() == "10")     ? ("|" + card.getRank() + "     |\n")
              :                                ("|" + card.getRank() + "      |\n");
-             
         sb.append(temp);
+
         sb.append("|       |\n");
         sb.append("|   .   |\n");
         sb.append("|       |\n");
+        
         temp = (card.getRank() == "Jack" 
              || card.getRank() == "King")   ? ("|___" + card.getRank() + "|\n") 
              : (card.getRank() == "Queen")  ? ("|__" + card.getRank() + "|\n")
