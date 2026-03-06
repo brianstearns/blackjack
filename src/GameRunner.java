@@ -86,10 +86,12 @@ public class GameRunner {
                     deck.dealCard(), deck.dealCard()
             };
 
-            // System.out.println("Your cards: " + displayCard(playersCard[0]) + ", " + displayCard(playersCard[1]) + " --- Count: "
-            //         + (deck.getCardValue(playersCard[0]) + deck.getCardValue(playersCard[1])));
+            // System.out.println("Your cards: " + displayCard(playersCard[0]) + ", " +
+            // displayCard(playersCard[1]) + " --- Count: "
+            // + (deck.getCardValue(playersCard[0]) + deck.getCardValue(playersCard[1])));
             // System.out.println(
-            //         "Dealer's visible card: " + displayCard(dealersCard[0]) + " --- Count: " + deck.getCardValue(dealersCard[0]));
+            // "Dealer's visible card: " + displayCard(dealersCard[0]) + " --- Count: " +
+            // deck.getCardValue(dealersCard[0]));
 
             int blackjackResult = hasBlackjack(playersCard, dealersCard, deck);
 
@@ -97,13 +99,15 @@ public class GameRunner {
 
             switch (blackjackResult) {
                 case 0 -> {
-                    System.out.println(Color.YELLOW.getCode() + "Both you and the dealer have blackjack. It's a push!" + Color.RESET.getCode());
+                    System.out.println(Color.YELLOW.getCode() + "Both you and the dealer have blackjack. It's a push!"
+                            + Color.RESET.getCode());
                     System.out.println("Dealer's hand: " + dealersCard[0] + ", " + dealersCard[1]);
                     System.out.println("Your hand: " + playersCard[0] + ", " + playersCard[1]);
                     hitting = false;
                 }
                 case -1 -> {
-                    System.out.println(Color.RED.getCode() + "Dealer has blackjack sorry you lose" + Color.RESET.getCode());
+                    System.out.println(
+                            Color.RED.getCode() + "Dealer has blackjack sorry you lose" + Color.RESET.getCode());
                     System.out.println("Dealer's hand: " + dealersCard[0] + ", " + dealersCard[1]);
                     System.out.println("Your hand: " + playersCard[0] + ", " + playersCard[1]);
                     currentPlayer.loseChips(wager);
@@ -111,7 +115,8 @@ public class GameRunner {
                     pm.savePlayers();
                 }
                 case 1 -> {
-                    System.out.println(Color.GREEN.getCode() + "You have blackjack congrats you win" + Color.RESET.getCode());
+                    System.out.println(
+                            Color.GREEN.getCode() + "You have blackjack congrats you win" + Color.RESET.getCode());
                     System.out.println("Dealer's hand: " + dealersCard[0] + ", " + dealersCard[1]);
                     System.out.println("Your hand: " + playersCard[0] + ", " + playersCard[1]);
                     currentPlayer.winChips((int) (wager * 1.5));
@@ -137,7 +142,8 @@ public class GameRunner {
                 System.out.println(displayCard(dealersCard[0]));
 
                 if (count == 21) {
-                    System.out.println(Color.CYAN.getCode() + "You hit 21! Good luck against the dealer!" + Color.RESET.getCode());
+                    System.out.println(
+                            Color.CYAN.getCode() + "You hit 21! Good luck against the dealer!" + Color.RESET.getCode());
                     currentPlayer.winChips(wager);
                     pm.savePlayers();
                     hitting = false;
@@ -145,7 +151,8 @@ public class GameRunner {
                 }
 
                 if (count > 21) {
-                    System.out.println(Color.RED.getCode() + "You busted with a total of " + count + ". You lose." + Color.RESET.getCode());
+                    System.out.println(Color.RED.getCode() + "You busted with a total of " + count + ". You lose."
+                            + Color.RESET.getCode());
                     currentPlayer.loseChips(wager);
                     pm.savePlayers();
                     hitting = false;
@@ -158,12 +165,15 @@ public class GameRunner {
 
                 if (actionInput.toLowerCase().equals("double")) {
                     if (playersCard.length != 2) {
-                        System.out.println(Color.YELLOW.getCode() + "You can only double down on your first move (with 2 cards)." + Color.RESET.getCode());
+                        System.out.println(
+                                Color.YELLOW.getCode() + "You can only double down on your first move (with 2 cards)."
+                                        + Color.RESET.getCode());
                         continue;
                     }
 
                     if (currentPlayer.getChipCount() < wager * 2) {
-                        System.out.println(Color.YELLOW.getCode() + "You don't have enough chips to double down." + Color.RESET.getCode());
+                        System.out.println(Color.YELLOW.getCode() + "You don't have enough chips to double down."
+                                + Color.RESET.getCode());
                         continue;
                     }
 
@@ -178,7 +188,8 @@ public class GameRunner {
                     count = calculateHandValue(playersCard, deck);
 
                     if (count > 21) {
-                        System.out.println(Color.RED.getCode() + "You busted with " + count + ". You lose." + Color.RESET.getCode());
+                        System.out.println(Color.RED.getCode() + "You busted with " + count + ". You lose."
+                                + Color.RESET.getCode());
                         currentPlayer.loseChips(wager);
                         pm.savePlayers();
                         playerBusted = true;
@@ -194,7 +205,8 @@ public class GameRunner {
                 } else if (actionInput.toLowerCase().equals("stand")) {
                     hitting = false;
                 } else {
-                    System.out.println(Color.YELLOW.getCode() + "Invalid input. Please enter 'hit', 'stand', or 'double'. " + Color.RESET.getCode());
+                    System.out.println(Color.YELLOW.getCode()
+                            + "Invalid input. Please enter 'hit', 'stand', or 'double'. " + Color.RESET.getCode());
                 }
             }
 
@@ -223,16 +235,20 @@ public class GameRunner {
 
             if (!playerBusted && hasBlackjack(dealersCard, playersCard, deck) == 2) {
                 if (dealerCount > 21) {
-                    System.out.println(Color.MAGENTA.getCode() + "Dealer busted with a total of " + dealerCount + ". You win!" + Color.RESET.getCode());
+                    System.out.println(Color.MAGENTA.getCode() + "Dealer busted with a total of " + dealerCount
+                            + ". You win!" + Color.RESET.getCode());
                     currentPlayer.winChips(wager);
                 } else if (dealerCount > count) {
-                    System.out.println(Color.RED.getCode() + "Dealer wins with a total of " + dealerCount + " against your " + count + "." + Color.RESET.getCode());
+                    System.out.println(Color.RED.getCode() + "Dealer wins with a total of " + dealerCount
+                            + " against your " + count + "." + Color.RESET.getCode());
                     currentPlayer.loseChips(wager);
                 } else if (dealerCount < count) {
-                    System.out.println(Color.GREEN.getCode() + "You win with a total of " + count + " against the dealer's " + dealerCount + "!" + Color.RESET.getCode());
+                    System.out.println(Color.GREEN.getCode() + "You win with a total of " + count
+                            + " against the dealer's " + dealerCount + "!" + Color.RESET.getCode());
                     currentPlayer.winChips(wager);
                 } else {
-                    System.out.println(Color.CYAN.getCode() + "It's a push with both you and the dealer at " + count + "." + Color.RESET.getCode());
+                    System.out.println(Color.CYAN.getCode() + "It's a push with both you and the dealer at " + count
+                            + "." + Color.RESET.getCode());
                 }
             }
 
@@ -325,7 +341,9 @@ public class GameRunner {
     }
 
     /**
-     * Returns a string representation of the game's logo to be displayed at the start
+     * Returns a string representation of the game's logo to be displayed at the
+     * start
+     * 
      * @return String containing the ASCII art logo of the game
      */
     public static String printLogo() {
@@ -341,18 +359,20 @@ public class GameRunner {
                  \\_______/ \\__| \\_______| \\_______|\\__|  \\__|\\______/  \\_______| \\_______|\\__|  \\__|
                 """.toCharArray();
         StringBuilder result = new StringBuilder();
-        for(char c : logo) {
+        for (char c : logo) {
             if (c == '$') {
                 result.append(Color.GREEN.getCode() + c + Color.RESET.getCode());
             } else {
                 result.append(c);
             }
         }
-        return result.toString();        
+        return result.toString();
     }
 
     /**
-     * Displays a shuffling animation in the console by printing "Shuffling deck" followed by three dots with a delay between each dot.
+     * Displays a shuffling animation in the console by printing "Shuffling deck"
+     * followed by three dots with a delay between each dot.
+     * 
      * @throws InterruptedException if the thread is interrupted while sleeping
      */
     public static void displayShuffle() throws InterruptedException {
@@ -366,6 +386,7 @@ public class GameRunner {
 
     /**
      * Nicely display the value of the card in ASCII characters
+     * 
      * @param card The card to have displayed
      * @return The full string of the card on display
      */
@@ -374,26 +395,47 @@ public class GameRunner {
         String temp = "";
 
         sb.append(" _______\n");
-        temp = (card.getRank() == "Jack" 
-             || card.getRank() == "King")   ? ("|" + card.getRank() + "   |\n") 
-             : (card.getRank() == "Queen")  ? ("|" + card.getRank() + "  |\n")
-             : (card.getRank() == "Ace")    ? ("|" + card.getRank() + "    |\n")
-             : (card.getRank() == "10")     ? ("|" + card.getRank() + "     |\n")
-             :                                ("|" + card.getRank() + "      |\n");
+        temp = (card.getRank() == "Jack"
+                || card.getRank() == "King") ? ("|" + card.getRank() + "   |\n")
+                        : (card.getRank() == "Queen") ? ("|" + card.getRank() + "  |\n")
+                                : (card.getRank() == "Ace") ? ("|" + card.getRank() + "    |\n")
+                                        : (card.getRank() == "10") ? ("|" + card.getRank() + "     |\n")
+                                                : ("|" + card.getRank() + "      |\n");
         sb.append(temp);
 
         sb.append("|       |\n");
         sb.append("|   .   |\n");
         sb.append("|       |\n");
-        
-        temp = (card.getRank() == "Jack" 
-             || card.getRank() == "King")   ? ("|___" + card.getRank() + "|\n") 
-             : (card.getRank() == "Queen")  ? ("|__" + card.getRank() + "|\n")
-             : (card.getRank() == "Ace")    ? ("|____" + card.getRank() + "|\n")
-             : (card.getRank() == "10")     ? ("|_____" + card.getRank() + "|\n")
-             :                                ("|______" + card.getRank() + "|\n");
+
+        temp = (card.getRank() == "Jack"
+                || card.getRank() == "King") ? ("|___" + card.getRank() + "|\n")
+                        : (card.getRank() == "Queen") ? ("|__" + card.getRank() + "|\n")
+                                : (card.getRank() == "Ace") ? ("|____" + card.getRank() + "|\n")
+                                        : (card.getRank() == "10") ? ("|_____" + card.getRank() + "|\n")
+                                                : ("|______" + card.getRank() + "|\n");
         sb.append(temp);
 
         return sb.toString();
+    }
+
+    /**
+     * Command to clear console based on OS.
+     * If the os is windows, use a series of commands to clear.
+     * If the os is linux, use the base clear command.
+     */
+    @SuppressWarnings("deprecation")
+    public static void clearConsole() {
+        try {
+            final String os = System.getProperty("os.name");
+
+            if (os.contains("Windows")) {
+                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+            } else {
+                Runtime.getRuntime().exec("clear");
+            }
+        } catch (final Exception e) {
+            System.out.println(e);
+        }
+
     }
 }
