@@ -52,6 +52,7 @@ public class GameRunner {
             System.out.print("Do you want to play a hand? (yes/no): ");
             String playInput = scanner.nextLine().trim().toLowerCase();
             if (playInput.equals("yes") || playInput.equals("y")) {
+                clearConsole();
                 System.out.println("-----------------------\nStarting a new hand...");
             } else if (playInput.equals("no") || playInput.equals("n")) {
                 gameRunning = false;
@@ -66,12 +67,27 @@ public class GameRunner {
             while (true) {
                 System.out.println("Your current chip count: " + currentPlayer.printChipCount());
                 System.out.print("Enter your wager: ");
-                String wagerInput = scanner.nextLine().trim();
+
+                String wagerInput = scanner.nextLine().trim().replace(",", "");
+                  
+                if (wagerInput.toLowerCase().contains("m")) {
+                    wagerInput = wagerInput.replace("m", "000000");
+                } else if (wagerInput.toLowerCase().contains("k")) {
+                    wagerInput = wagerInput.replace("k", "000");
+                }
+                System.out.println(wagerInput);
+
                 try {
                     wager = Integer.parseInt(wagerInput);
                     if (wager > currentPlayer.getChipCount()) {
                         System.out.println("You cannot wager more than your current chip count. Try again.");
-                    } else if (wager <= 0) {
+                    } else if (wager >= 2147483647) {
+                        System.out.println("Wager too large, must be less than 2,147,483,647");
+                    } else if ((wager *2) + currentPlayer.getChipCount() >= Integer.MAX_VALUE) {
+                        System.out.println("Error: Chip count too high, Cannot win more than the value of a max Integer.");
+                        System.out.println("My advice, reset the chip count or bathe in your riches");
+                    } 
+                    else if (wager <= 0) {
                         System.out.println("Wager must be a positive number. Try again.");
                     } else {
                         break;
@@ -130,17 +146,17 @@ public class GameRunner {
             int count = 0;
 
             while (hitting) {
+                clearConsole();
                 System.out.println("------------------------------");
                 count = calculateHandValue(playersCard, deck);
 
                 System.out.print("Your hand: ");
                 System.out.println(" --- Count: " + count);
-                for (Card card : playersCard) {
-                    System.out.print(displayCard(card));
-                }
+                displayCardsSideBySide(playersCard);
 
                 System.out.println("Dealer's hand:  --- Count: " + deck.getCardValue(dealersCard[0]));
-                System.out.println(displayCard(dealersCard[0]));
+                Card[] dealerUpCard = new Card[] { dealersCard[0] };
+                displayCardsSideBySide(dealerUpCard);
 
                 if (count == 21) {
                     System.out.println(
@@ -228,10 +244,14 @@ public class GameRunner {
                 }
             }
 
-            System.out.println("Dealer's final hand: ");
-            for (Card card : dealersCard) {
-                System.out.println(displayCard(card));
-            }
+            clearConsole();
+
+            System.out.println("Your final hand");
+            displayCardsSideBySide(playersCard);
+            System.out.println("Count: " + count);
+
+            System.out.println("Dealer's final hand:");
+            displayCardsSideBySide(dealersCard);
             System.out.println("Count: " + dealerCount);
 
             if (!playerBusted && hasBlackjack(dealersCard, playersCard, deck) == 2) {
@@ -391,40 +411,57 @@ public class GameRunner {
      * @param card The card to have displayed
      * @return The full string of the card on display
      */
-    public static String displayCard(Card card) {
-        StringBuilder sb = new StringBuilder();
-        String temp = "";
+    public static String[] displayCardLines(Card card) {
+        String[] lines = new String[6];
+        String rank = card.getRank();
+        String suit = "";
 
-        sb.append(" _______\n");
-        temp = (card.getRank() == "Jack"
-                || card.getRank() == "King") ? ("|" + card.getRank() + "   |\n")
-                        : (card.getRank() == "Queen") ? ("|" + card.getRank() + "  |\n")
-                                : (card.getRank() == "Ace") ? ("|" + card.getRank() + "    |\n")
-                                        : (card.getRank() == "10") ? ("|" + card.getRank() + "     |\n")
-                                                : ("|" + card.getRank() + "      |\n");
-        sb.append(temp);
+        switch (card.getSuit()) {
+            case "Hearts":
+                suit = Color.RED.getCode() + "H" + Color.RESET.getCode();
+                break;
+            case "Diamonds":
+                suit = Color.RED.getCode() + "D" + Color.RESET.getCode();
+                break;
+            case "Clubs":
+                suit = Color.LIGHT_GREY.getCode() + "C" + Color.RESET.getCode();
+                break;
+            case "Spades":
+                suit = Color.LIGHT_GREY.getCode() + "S" + Color.RESET.getCode();
+                break;
+        }
 
-        sb.append("|       |\n");
+        lines[0] = " _______";
+        lines[1] = String.format("|%-7s|", rank);
+        lines[2] = "|       |";
+        lines[3] = "|   " + suit + "   |";
+        lines[4] = "|       |";
+        lines[5] = (card.getRank() == "Jack"
+                || card.getRank() == "King") ? ("|___" + card.getRank() + "|")
+                        : (card.getRank() == "Queen") ? ("|__" + card.getRank() + "|")
+                                : (card.getRank() == "Ace") ? ("|____" + card.getRank() + "|")
+                                        : (card.getRank() == "10") ? ("|_____" + card.getRank() + "|")
+                                                : ("|______" + card.getRank() + "|");
 
-        temp = (card.getSuit() == "Hearts") ? ("|   " + Color.RED.getCode() + "H" + Color.RESET.getCode() + "   |\n")
-                : (card.getSuit() == "Diamonds")
-                        ? ("|   " + Color.RED.getCode() + "D" + Color.RESET.getCode() + "   |\n")
-                        : (card.getSuit() == "Clubs")
-                                ? ("|   " + Color.LIGHT_GREY.getCode() + "C" + Color.RESET.getCode() + "   |\n")
-                                : ("|   " + Color.LIGHT_GREY.getCode() + "S" + Color.RESET.getCode() + "   |\n");
-        sb.append(temp);
+        return lines;
+    }
 
-        sb.append("|       |\n");
+    public static void displayCardsSideBySide(Card[] cards) {
+        if (cards.length == 0)
+            return;
 
-        temp = (card.getRank() == "Jack"
-                || card.getRank() == "King") ? ("|___" + card.getRank() + "|\n")
-                        : (card.getRank() == "Queen") ? ("|__" + card.getRank() + "|\n")
-                                : (card.getRank() == "Ace") ? ("|____" + card.getRank() + "|\n")
-                                        : (card.getRank() == "10") ? ("|_____" + card.getRank() + "|\n")
-                                                : ("|______" + card.getRank() + "|\n");
-        sb.append(temp);
+        String[][] allLines = new String[cards.length][];
+        for (int i = 0; i < cards.length; i++) {
+            allLines[i] = displayCardLines(cards[i]);
+        }
 
-        return sb.toString();
+        for (int line = 0; line < allLines[0].length; line++) {
+            StringBuilder sb = new StringBuilder();
+            for (int c = 0; c < cards.length; c++) {
+                sb.append(allLines[c][line]).append("  ");
+            }
+            System.out.println(sb.toString());
+        }
     }
 
     /**
