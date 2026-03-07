@@ -3,26 +3,28 @@ echo Cleaning old builds...
 if exist blackjack.jar del blackjack.jar
 rmdir /s /q out
 rmdir /s /q temp
+mkdir out
+
+echo Generating list of Java files...
+dir /s /b src\*.java > sources.txt
 
 echo Compiling...
-javac -cp "libs/*" -d out src\*.java
+javac -cp "libs/*" -d out @sources.txt
 
-echo Creating temp folder...
 mkdir temp
+for %%l in (libs\*.jar) do (
+    cd temp
+    jar xf ..\%%l
+    cd ..
+)
+xcopy out temp /E /I /Q
+jar cfe blackjack.jar app.GameRunner -C temp .
 
-echo Extracting libraries...
-cd temp
-jar xf ..\libs\gson-2.10.1.jar
-cd ..
+:: --- Cleanup ---
+del sources.txt
+rmdir /s /q out
+rmdir /s /q temp
 
-echo Copying classes...
-xcopy out temp /E /I
-
-echo Building jar...
-jar cfe blackjack.jar GameRunner -C temp .
-
-del /s /q temp
-del /s /q out
-
-echo Done!
+echo Build complete! Run with:
+echo java -jar blackjack.jar
 pause
