@@ -243,8 +243,6 @@ public class GameRunner {
                 }
             }
 
-            clearConsole();
-
             System.out.println("Your final hand");
             displayCardsSideBySide(playersCard);
             System.out.println("Count: " + count);
