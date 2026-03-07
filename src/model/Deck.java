@@ -1,3 +1,4 @@
+package model;
 /**
  * Represents a standard deck of 52 playing cards, providing methods to create,
  * shuffle, and deal cards, as well as calculate card values and determine when

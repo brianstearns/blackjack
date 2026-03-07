@@ -1,5 +1,12 @@
+package app;
 import java.util.List;
 import java.util.Scanner;
+
+import model.Card;
+import model.Deck;
+import model.Player;
+import manager.PlayerManager;
+import util.Color;
 
 public class GameRunner {
     public static void main(String[] args) throws InterruptedException {

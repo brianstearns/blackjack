@@ -1,3 +1,4 @@
+package model;
 /**
  * Represents a player in the blackjack game, including their name and chip
  * count.
