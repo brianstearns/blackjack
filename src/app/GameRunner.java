@@ -69,7 +69,7 @@ public class GameRunner {
                 System.out.print("Enter your wager: ");
 
                 String wagerInput = scanner.nextLine().trim().replace(",", "");
-                  
+
                 if (wagerInput.toLowerCase().contains("m")) {
                     wagerInput = wagerInput.replace("m", "000000");
                 } else if (wagerInput.toLowerCase().contains("k")) {
@@ -83,11 +83,11 @@ public class GameRunner {
                         System.out.println("You cannot wager more than your current chip count. Try again.");
                     } else if (wager >= 2147483647) {
                         System.out.println("Wager too large, must be less than 2,147,483,647");
-                    } else if ((wager *2) + currentPlayer.getChipCount() >= Integer.MAX_VALUE) {
-                        System.out.println("Error: Chip count too high, Cannot win more than the value of a max Integer.");
+                    } else if ((wager * 2) + currentPlayer.getChipCount() >= Integer.MAX_VALUE) {
+                        System.out.println(
+                                "Error: Chip count too high, Cannot win more than the value of a max Integer.");
                         System.out.println("My advice, reset the chip count or bathe in your riches");
-                    } 
-                    else if (wager <= 0) {
+                    } else if (wager <= 0) {
                         System.out.println("Wager must be a positive number. Try again.");
                     } else {
                         break;
