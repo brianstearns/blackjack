@@ -75,7 +75,6 @@ public class GameRunner {
                 } else if (wagerInput.toLowerCase().contains("k")) {
                     wagerInput = wagerInput.replace("k", "000");
                 }
-                System.out.println(wagerInput);
 
                 try {
                     wager = Integer.parseInt(wagerInput);
