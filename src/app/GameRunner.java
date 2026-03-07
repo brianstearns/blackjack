@@ -1,4 +1,5 @@
 package app;
+
 import java.util.List;
 import java.util.Scanner;
 
@@ -92,13 +93,6 @@ public class GameRunner {
             Card playersCard[] = new Card[] {
                     deck.dealCard(), deck.dealCard()
             };
-
-            // System.out.println("Your cards: " + displayCard(playersCard[0]) + ", " +
-            // displayCard(playersCard[1]) + " --- Count: "
-            // + (deck.getCardValue(playersCard[0]) + deck.getCardValue(playersCard[1])));
-            // System.out.println(
-            // "Dealer's visible card: " + displayCard(dealersCard[0]) + " --- Count: " +
-            // deck.getCardValue(dealersCard[0]));
 
             int blackjackResult = hasBlackjack(playersCard, dealersCard, deck);
 
@@ -362,7 +356,7 @@ public class GameRunner {
                  $$$$$$$\\ |$$ | \\____$$\\ $$  _____|$$ | $$  |     $$ | \\____$$\\ $$  _____|$$ | $$  |
                  $$  __$$\\ $$ | $$$$$$$ |$$ /      $$$$$$  /$$\\   $$ | $$$$$$$ |$$ /      $$$$$$  /
                  $$ |  $$ |$$ |$$  __$$ |$$ |      $$  _$$< $$ |  $$ |$$  __$$ |$$ |      $$  _$$<
-                 $$$$$$$  |$$ |\\$$$$$$$ |\\$$$$$$$\\ $$ | \\$$\\$$$$$$  |\\$$$$$$$ |\\$$$$$$$\\ $$ | \\$$\\
+                 $$$$$$$  |$$ |\\$$$$$$$ |\\$$$$$$$\\ $$ | \\$$ \\$$$$$$  |\\$$$$$$$ |\\$$$$$$$\\ $$ | \\$$\\
                  \\_______/ \\__| \\_______| \\_______|\\__|  \\__|\\______/  \\_______| \\_______|\\__|  \\__|
                 """.toCharArray();
         StringBuilder result = new StringBuilder();
@@ -411,7 +405,15 @@ public class GameRunner {
         sb.append(temp);
 
         sb.append("|       |\n");
-        sb.append("|   .   |\n");
+
+        temp = (card.getSuit() == "Hearts") ? ("|   " + Color.RED.getCode() + "H" + Color.RESET.getCode() + "   |\n")
+                : (card.getSuit() == "Diamonds")
+                        ? ("|   " + Color.RED.getCode() + "D" + Color.RESET.getCode() + "   |\n")
+                        : (card.getSuit() == "Clubs")
+                                ? ("|   " + Color.LIGHT_GREY.getCode() + "C" + Color.RESET.getCode() + "   |\n")
+                                : ("|   " + Color.LIGHT_GREY.getCode() + "S" + Color.RESET.getCode() + "   |\n");
+        sb.append(temp);
+
         sb.append("|       |\n");
 
         temp = (card.getRank() == "Jack"
