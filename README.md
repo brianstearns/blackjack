@@ -1,5 +1,5 @@
 <div style="align-items: center; display: flex; gap: 10px; justify-content: center;"> 
-    <img src="screenshots/logo.png" alt="Enter player name and welcome message" width="300" style="margin-right: 10px;"/> 
+    <img src="screenshots/logo1.png" alt="Blackjack Logo" width="500" style="margin-right: 10px;"/> 
 </div>
 # Blackjack CLI Game
 
