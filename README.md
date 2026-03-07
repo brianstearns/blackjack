@@ -1,3 +1,6 @@
+<div style="align-items: center; display: flex; gap: 10px; justify-content: center;"> 
+    <img src="screenshots/logo.png" alt="Enter player name and welcome message" width="300" style="margin-right: 10px;"/> 
+</div>
 # Blackjack CLI Game
 
 ## A simple command-line blackjack game in Java featuring:
