@@ -48,6 +48,10 @@ public class GameRunner {
         System.out.println("Current chip count: " + currentPlayer.printChipCount());
 
         boolean gameRunning = true;
+        if (currentPlayer.getChipCount() == 0) {
+            System.out.println("Sorry you are all out of chips!");
+            gameRunning = false;
+        }
         while (gameRunning) {
             System.out.print("Do you want to play a hand? (yes/no): ");
             String playInput = scanner.nextLine().trim().toLowerCase();
@@ -176,10 +180,10 @@ public class GameRunner {
                     break;
                 }
 
-                System.out.println("What would you like to do? (hit/stand/double): ");
+                System.out.println("What would you like to do? (hit(h)/stand(s)/double(d)): ");
                 String actionInput = scanner.nextLine().trim().toLowerCase();
 
-                if (actionInput.toLowerCase().equals("double")) {
+                if (actionInput.toLowerCase().equals("double") || actionInput.toLowerCase().equals("d")) {
                     if (playersCard.length != 2) {
                         System.out.println(
                                 Color.YELLOW.getCode() + "You can only double down on your first move (with 2 cards)."
@@ -213,12 +217,12 @@ public class GameRunner {
 
                     hitting = false;
 
-                } else if (actionInput.toLowerCase().equals("hit")) {
+                } else if (actionInput.toLowerCase().equals("hit") || actionInput.toLowerCase().equals("h")) {
                     Card newCard = deck.dealCard();
                     playersCard = java.util.Arrays.copyOf(playersCard, playersCard.length + 1);
                     playersCard[playersCard.length - 1] = newCard;
                     System.out.println("You drew: " + newCard);
-                } else if (actionInput.toLowerCase().equals("stand")) {
+                } else if (actionInput.toLowerCase().equals("stand") || actionInput.toLowerCase().equals("s")) {
                     hitting = false;
                 } else {
                     System.out.println(Color.YELLOW.getCode()

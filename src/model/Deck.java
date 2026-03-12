@@ -6,7 +6,6 @@ package model;
  */
 public class Deck {
     private Card[] cards;
-    @SuppressWarnings("unused")
     private int top;
 
     /**
